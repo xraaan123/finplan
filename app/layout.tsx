@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import ThemeProvider from "@/components/providers/ThemeProvider";
+import { AuthProvider } from "@/context/AuthProvider";
+import Loader from "@/components/system/Loader";
+import { ToastContainer } from 'react-toastify'
+import RouteLoader from "@/components/system/RouteLoader";
+import Footer from "@/components/layout/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,11 +29,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <ThemeProvider attribute='class' defaultTheme="system" enableSystem>
+          <AuthProvider>
+            <div className="flex min-h-screen flex-col">
+              <Loader />
+              <RouteLoader />
+              <main className="flex-1">
+                {children}
+              </main>
+              <Footer />
+            </div>
+            <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop pauseOnHover theme="colored" />
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
