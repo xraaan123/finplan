@@ -14,18 +14,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsAuthenticated(!token);
+    const hasCookie = typeof document !== 'undefined' && document.cookie.includes('token=mocked-token');
+    setIsAuthenticated(hasCookie);
   }, [])
   
   const login = () => {
-    localStorage.setItem('token', 'mocked-token');
+    document.cookie = 'token=mocked-token; path=/;' 
     setIsAuthenticated(true)
     router.push('/dashboard')
   }
 
   const logout = () => {
-    localStorage.removeItem('token');
+    document.cookie = 'token=; Max-Age=0; path=/;'
     setIsAuthenticated(false);
     router.push('/login');
   }
